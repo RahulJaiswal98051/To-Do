@@ -1,0 +1,2 @@
+- [ ] Add Bootstrap JS to resources/views/layout.blade.php for dismissible alert functionality
+- [ ] Modify success alert in resources/views/index.blade.php to include dismissible close button with cross icon
