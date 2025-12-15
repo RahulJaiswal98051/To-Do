@@ -10,7 +10,7 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::all();
+        $todos = Todo::paginate(5);
         return view('index', compact('todos'));
     }
 
@@ -23,7 +23,7 @@ class TodoController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $input = $request->all();
@@ -56,7 +56,7 @@ class TodoController extends Controller
 
         if ($image = $request->file('image')) {
             // Delete old image if exists
-            if(file_exists(public_path('images/'.$todo->image))){
+            if($todo->image && file_exists(public_path('images/'.$todo->image)) && is_file(public_path('images/'.$todo->image))){
                 unlink(public_path('images/'.$todo->image));
             }
 
@@ -77,13 +77,21 @@ class TodoController extends Controller
     public function destroy(Todo $todo)
     {
         // Delete image from server
-        if(file_exists(public_path('images/'.$todo->image))){
+        if($todo->image && file_exists(public_path('images/'.$todo->image)) && is_file(public_path('images/'.$todo->image))){
             unlink(public_path('images/'.$todo->image));
         }
-        
+
         $todo->delete();
 
         return redirect()->route('todos.index')
             ->with('success', 'Todo deleted successfully');
+    }
+
+    public function complete(Todo $todo)
+    {
+        $todo->update(['status' => 'completed']);
+
+        return redirect()->route('todos.index')
+            ->with('success', 'Todo marked as completed successfully');
     }
 }

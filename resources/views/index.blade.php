@@ -14,15 +14,17 @@
 
     <table class="table table-bordered">
         <tr>
-            <th>Image</th>
-            <th>Title</th>
+            <th width="50px">S.N</th>
+            <th width="120px" height="100px">Image</th>
+            <th width="150px">Title</th>
             <th>Description</th>
-            <th>Status</th>
+            <th width="100px">Status</th>
             <th width="280px">Action</th>
         </tr>
         @foreach ($todos as $todo)
-        <tr>
-            <td><img src="/images/{{ $todo->image }}" width="100px"></td>
+        <tr style="height: 50px;">
+            <td>{{ $todos->firstItem() + $loop->index }}</td>
+            <td><img src="/images/{{ $todo->image }}" width="50px" height="50px"></td>
             <td>{{ $todo->title }}</td>
             <td>{{ $todo->description }}</td>
             <td>
@@ -31,14 +33,21 @@
                 </span>
             </td>
             <td>
-                <form action="{{ route('todos.destroy',$todo->id) }}" method="POST">
-                    <a class="btn btn-primary" href="{{ route('todos.edit',$todo->id) }}">Edit</a>
+                <a class="btn btn-primary" href="{{ route('todos.edit',$todo->id) }}">Edit</a>
+                @if($todo->status != 'completed')
+                <form action="{{ route('todos.complete',$todo->id) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-success">Complete</button>
+                </form>
+                @endif
+                <form action="{{ route('todos.destroy',$todo->id) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure? You want to delete {{ $todo->title }}')">Delete</button>
                 </form>
-            </td>
         </tr>
         @endforeach
     </table>
+    {!! $todos->links() !!}
 @endsection
