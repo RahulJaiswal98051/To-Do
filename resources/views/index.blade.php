@@ -14,8 +14,8 @@
 
     <table class="table table-bordered">
         <tr>
-            <th width="50px">S.N</th>
-            <th width="120px" height="100px">Image</th>
+            <th width="50px" height="50px">S.N</th>
+            <th width="120px" height="50px">Image</th>
             <th width="150px">Title</th>
             <th>Description</th>
             <th width="100px">Status</th>
